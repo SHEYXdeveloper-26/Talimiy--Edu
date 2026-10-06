@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ta'limiyEdu — Zamonaviy Ta'lim Platformasi</title>
+<style>
+/* ============ GLOBAL ============ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 10%, #1a2a3a, #0b0f17 80%);
+  color: white;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ============ ORQA FON YORUG'LIKLARI ============ */
+.glow-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glow-bg span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.55;
+  animation: floatGlow 20s infinite alternate ease-in-out;
+}
+
+.glow-bg span:nth-child(1) {
+  width: 55vw; height: 55vw;
+  background: #4f9eff;
+  top: -20vh; left: -10vw;
+  animation-duration: 24s;
+}
+.glow-bg span:nth-child(2) {
+  width: 50vw; height: 50vw;
+  background: #a86eff;
+  bottom: -15vh; right: -5vw;
+  animation-duration: 28s;
+  animation-delay: -6s;
+  opacity: 0.4;
+}
+.glow-bg span:nth-child(3) {
+  width: 40vw; height: 40vw;
+  background: #3ee0d0;
+  top: 40%; left: 35%;
+  filter: blur(160px);
+  opacity: 0.3;
+  animation-duration: 22s;
+  animation-delay: -12s;
+}
+.glow-bg span:nth-child(4) {
+  width: 35vw; height: 35vw;
+  background: #ff6ec7;
+  bottom: 20%; left: 5%;
+  filter: blur(150px);
+  opacity: 0.25;
+  animation-duration: 26s;
+  animation-delay: -4s;
+}
+
+@keyframes floatGlow {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(6%, 10%) scale(1.25); }
+}
+
+/* ============ UMUMIY LIQUID GLASS STILI ============ */
+.glass {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 30px 50px -20px rgba(0, 0, 0, 0.55),
+    inset 0 1px 3px rgba(255,255,255,0.55),
+    inset 0 -1px 3px rgba(0,0,0,0.25);
+}
+
+/* ============ NAVBAR ============ */
+.navbar-wrap {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 1320px;
+  z-index: 100;
+  border-radius: 28px;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.4s ease;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 44px; height: 44px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #7bb9ff, #4f7eff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; font-weight: 800; color: white;
+  box-shadow: 0 6px 18px rgba(79,126,255,0.55), inset 0 0 10px rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+.logo-text {
+  font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff, #c9ddff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+.nav-links {
+  display: flex; gap: 4px;
+  background: rgba(255,255,255,0.05);
+  padding: 6px; border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.nav-links a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none; font-weight: 500; font-size: 0.92rem;
+  padding: 10px 20px; border-radius: 30px;
+  transition: all 0.25s ease; border: 1px solid transparent;
+}
+.nav-links a:hover {
+  background: rgba(255,255,255,0.15);
+  color: white; border-color: rgba(255,255,255,0.3);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.5);
+}
+
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.9);
+  font-weight: 600; font-size: 0.92rem;
+  padding: 11px 22px; border-radius: 40px;
+  cursor: pointer; transition: all 0.3s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.6);
+  color: white;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.12));
+  border: 1px solid rgba(255,255,255,0.55);
+  color: white; font-weight: 700; font-size: 0.92rem;
+  padding: 12px 26px; border-radius: 40px;
+  cursor: pointer; transition: all 0.3s ease;
+  box-shadow: 0 10px 25px -8px rgba(79,126,255,0.7), inset 0 1px 4px white;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2));
+  box-shadow: 0 18px 35px -10px rgba(79,126,255,0.9), inset 0 1px 8px white;
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  z-index: 5;
+  max-width: 1320px;
+  margin: 130px auto 0;
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px; border-radius: 40px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  font-size: 0.85rem; font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 24px;
+}
+.hero-badge .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4fff9e; box-shadow: 0 0 12px #4fff9e;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+.hero h1 {
+  font-size: 3.8rem; font-weight: 800;
+  line-height: 1.1; letter-spacing: -0.03em;
+  margin-bottom: 26px;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+.hero h1 .grad {
+  background: linear-gradient(135deg, #9ac7ff 0%, #ffffff 50%, #c3a9ff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 25px rgba(79,126,255,0.6));
+}
+
+.hero p.lead {
+  font-size: 1.15rem; line-height: 1.7;
+  color: rgba(255,255,255,0.78);
+  margin-bottom: 36px; max-width: 560px;
+}
+
+.hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn-large {
+  padding: 17px 36px;
+  border-radius: 60px;
+  font-size: 1.05rem; font-weight: 700;
+  cursor: pointer; transition: all 0.35s ease;
+  display: inline-flex; align-items: center; gap: 10px;
+  letter-spacing: 0.2px;
+}
+
+.btn-large.fill {
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.12));
+  border: 1px solid rgba(255,255,255,0.6);
+  color: white;
+  box-shadow: 0 22px 40px -12px rgba(79,126,255,0.8), inset 0 1px 5px white;
+}
+.btn-large.fill:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 30px 55px -12px rgba(79,126,255,1), inset 0 1px 10px white;
+  background: linear-gradient(135deg, rgba(255,255,255,0.42), rgba(255,255,255,0.2));
+}
+
+.btn-large.outline {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+}
+.btn-large.outline:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.7);
+  color: white;
+  transform: translateY(-4px);
+}
+
+/* Hero visual */
+.hero-visual {
+  display: flex; flex-direction: column; gap: 20px;
+  perspective: 1200px;
+}
+
+.float-card {
+  padding: 24px 26px;
+  border-radius: 28px;
+  display: flex; align-items: center; gap: 20px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative; overflow: hidden;
+  animation: floaty 6s ease-in-out infinite;
+}
+.float-card:nth-child(1) { animation-delay: 0s; }
+.float-card:nth-child(2) { animation-delay: -2s; margin-left: 30px; }
+.float-card:nth-child(3) { animation-delay: -4s; }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotateX(0); }
+  50% { transform: translateY(-10px) rotateX(2deg); }
+}
+
+.float-card::after {
+  content: ""; position: absolute;
+  top: -50%; left: -30%; width: 70%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 65%);
+  transform: rotate(25deg); pointer-events: none;
+}
+
+.float-card:hover {
+  transform: translateX(10px) scale(1.03) !important;
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 35px 60px -15px rgba(79,126,255,0.6), inset 0 1px 8px white;
+}
+
+.fc-icon {
+  width: 58px; height: 58px; flex-shrink: 0;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  box-shadow: inset 0 1px 6px rgba(255,255,255,0.6), 0 10px 20px -8px black;
+}
+.fc-text h4 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+.fc-text p { font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.4; }
+
+/* ============ STATS ============ */
+.stats-section {
+  position: relative;
+  z-index: 5;
+  max-width: 1320px;
+  margin: 60px auto 0;
+  padding: 0 40px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-radius: 32px;
+  padding: 34px 20px;
+  gap: 20px;
+}
+.stat-item { text-align: center; }
+.stat-number {
+  font-size: 2.6rem; font-weight: 800;
+  background: linear-gradient(135deg, #fff, #bdd3ff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin-bottom: 6px;
+  text-shadow: 0 6px 20px rgba(79,126,255,0.5);
+}
+.stat-label {
+  font-size: 0.85rem; text-transform: uppercase;
+  letter-spacing: 1.8px; font-weight: 600;
+  color: rgba(255,255,255,0.6);
+}
+
+/* ============ SECTION HEADER ============ */
+.section {
+  position: relative;
+  z-index: 5;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 100px 40px 40px;
+}
+.section-head { text-align: center; margin-bottom: 60px; }
+.section-head .kicker {
+  display: inline-block;
+  padding: 6px 18px; border-radius: 40px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  font-size: 0.82rem; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 18px;
+}
+.section-head h2 {
+  font-size: 2.8rem; font-weight: 800;
+  letter-spacing: -0.02em; line-height: 1.2;
+  margin-bottom: 14px;
+}
+.section-head h2 .grad {
+  background: linear-gradient(135deg, #9ac7ff, #ffffff, #c3a9ff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.section-head p {
+  font-size: 1.1rem; color: rgba(255,255,255,0.7);
+  max-width: 620px; margin: 0 auto;
+}
+
+/* ============ USTOZLAR ============ */
+.teachers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.teacher-card {
+  border-radius: 32px;
+  padding: 28px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.teacher-card::before {
+  content: ""; position: absolute;
+  top: 0; left: 0; right: 0; height: 120px;
+  background: linear-gradient(135deg, rgba(79,126,255,0.35), rgba(168,110,255,0.25));
+  filter: blur(40px); pointer-events: none;
+}
+.teacher-card:hover {
+  transform: translateY(-10px);
+  background: rgba(255,255,255,0.11);
+  border-color: rgba(255,255,255,0.45);
+  box-shadow: 0 40px 60px -20px rgba(79,126,255,0.6), inset 0 1px 6px white;
+}
+
+.teacher-avatar {
+  width: 96px; height: 96px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px; font-weight: 800; color: white;
+  border: 3px solid rgba(255,255,255,0.35);
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.6), inset 0 1px 6px rgba(255,255,255,0.5);
+  position: relative;
+}
+.teacher-avatar::after {
+  content: ""; position: absolute; inset: -6px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,0.25);
+  animation: ringPulse 3s infinite;
+}
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(1.08); }
+}
+
+.ta-1 { background: linear-gradient(135deg, #4f9eff, #7bb9ff); }
+.ta-2 { background: linear-gradient(135deg, #a86eff, #d18aff); }
+.ta-3 { background: linear-gradient(135deg, #3ee0d0, #4fb8e0); }
+.ta-4 { background: linear-gradient(135deg, #ff6ec7, #ff9a8b); }
+
+.teacher-card h3 {
+  font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;
+}
+.teacher-card .role {
+  font-size: 0.88rem; color: rgba(255,255,255,0.65);
+  margin-bottom: 16px; font-weight: 500;
+}
+.teacher-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  justify-content: center; margin-bottom: 18px;
+}
+.tag {
+  padding: 5px 12px; border-radius: 30px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  font-size: 0.75rem; color: rgba(255,255,255,0.85);
+  font-weight: 500;
+}
+.teacher-stats {
+  display: flex; justify-content: space-around;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.teacher-stats div { text-align: center; }
+.teacher-stats .num {
+  font-size: 1.15rem; font-weight: 700;
+  color: white; display: block;
+}
+.teacher-stats .lbl {
+  font-size: 0.72rem; color: rgba(255,255,255,0.55);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* ============ KURSLAR ============ */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.course-card {
+  border-radius: 32px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex; flex-direction: column;
+}
+.course-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.11);
+  border-color: rgba(255,255,255,0.45);
+  box-shadow: 0 40px 65px -20px rgba(79,126,255,0.6), inset 0 1px 6px white;
+}
+
+.course-badge {
+  display: inline-block; align-self: flex-start;
+  padding: 6px 14px; border-radius: 30px;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.cb-popular { background: rgba(79,126,255,0.25); color: #b8d4ff; border: 1px solid rgba(79,126,255,0.5); }
+.cb-new { background: rgba(79,255,158,0.2); color: #a8ffcc; border: 1px solid rgba(79,255,158,0.4); }
+.cb-hot { background: rgba(255,110,199,0.2); color: #ffb8e0; border: 1px solid rgba(255,110,199,0.4); }
+
+.course-card h3 {
+  font-size: 1.35rem; font-weight: 700;
+  margin-bottom: 12px; line-height: 1.3;
+}
+.course-card > p {
+  font-size: 0.95rem; color: rgba(255,255,255,0.7);
+  line-height: 1.55; margin-bottom: 22px; flex-grow: 1;
+}
+
+.course-meta {
+  display: flex; gap: 16px; margin-bottom: 22px;
+  font-size: 0.85rem; color: rgba(255,255,255,0.75);
+}
+.course-meta span { display: flex; align-items: center; gap: 6px; }
+
+.course-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.course-price {
+  font-size: 1.5rem; font-weight: 800;
+  background: linear-gradient(135deg, #fff, #bdd3ff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.course-price small {
+  font-size: 0.8rem; color: rgba(255,255,255,0.5);
+  font-weight: 400; display: block; margin-top: 2px;
+}
+.course-btn {
+  padding: 11px 22px; border-radius: 40px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: white; font-weight: 600; font-size: 0.88rem;
+  cursor: pointer; transition: all 0.3s;
+}
+.course-btn:hover {
+  background: rgba(255,255,255,0.28);
+  border-color: white;
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px -8px rgba(79,126,255,0.8);
+}
+
+/* ============ FIKRLAR ============ */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.testimonial {
+  border-radius: 32px;
+  padding: 30px;
+  position: relative;
+  transition: all 0.45s ease;
+}
+.testimonial:hover {
+  transform: translateY(-6px);
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.4);
+}
+.testimonial .quote {
+  font-size: 3rem; line-height: 1;
+  color: rgba(155,199,255,0.4);
+  font-family: Georgia, serif;
+  margin-bottom: 8px;
+}
+.testimonial p {
+  font-size: 0.98rem; line-height: 1.7;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 22px;
+  font-style: italic;
+}
+.testimonial-author {
+  display: flex; align-items: center; gap: 14px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.t-author-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: white; font-size: 1.1rem;
+  border: 2px solid rgba(255,255,255,0.35);
+  box-shadow: inset 0 1px 4px rgba(255,255,255,0.5);
+}
+.testimonial-author h5 { font-size: 0.98rem; font-weight: 700; }
+.testimonial-author span { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
+.stars { color: #ffd76e; font-size: 0.9rem; margin-top: 4px; letter-spacing: 1px; }
+
+/* ============ CTA SECTION ============ */
+.cta-section {
+  position: relative;
+  z-index: 5;
+  max-width: 1320px;
+  margin: 80px auto;
+  padding: 0 40px;
+}
+.cta-box {
+  border-radius: 40px;
+  padding: 70px 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-box::before {
+  content: ""; position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(79,126,255,0.25), transparent 60%),
+              radial-gradient(circle at 70% 80%, rgba(168,110,255,0.2), transparent 60%);
+  pointer-events: none;
+}
+.cta-box h2 {
+  font-size: 2.6rem; font-weight: 800;
+  margin-bottom: 18px; letter-spacing: -0.02em;
+  position: relative;
+}
+.cta-box p {
+  font-size: 1.15rem; color: rgba(255,255,255,0.78);
+  max-width: 620px; margin: 0 auto 36px;
+  position: relative;
+}
+.cta-box .hero-cta { justify-content: center; position: relative; }
+
+/* ============ FOOTER ============ */
+.footer {
+  position: relative;
+  z-index: 5;
+  max-width: 1320px;
+  margin: 60px auto 30px;
+  padding: 50px 50px 30px;
+  border-radius: 36px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+.footer-brand p {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.92rem; line-height: 1.65;
+  margin: 16px 0 20px;
+}
+.socials { display: flex; gap: 10px; }
+.social-btn {
+  width: 42px; height: 42px; border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.85); text-decoration: none;
+  font-size: 1.05rem; font-weight: 700;
+  transition: all 0.3s;
+  backdrop-filter: blur(8px);
+}
+.social-btn:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.5);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -5px rgba(79,126,255,0.6);
+}
+.footer-col h4 {
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 18px; color: white;
+  letter-spacing: 0.3px;
+}
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 11px; }
+.footer-col a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none; font-size: 0.9rem;
+  transition: all 0.25s;
+}
+.footer-col a:hover { color: white; padding-left: 5px; }
+
+.footer-bottom {
+  padding-top: 25px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 14px;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.85rem;
+}
+
+/* ============ MODAL (RO'YXATDAN O'TISH) ============ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 15, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+.modal-overlay.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 36px;
+  padding: 44px 42px;
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  max-height: 92vh;
+  overflow-y: auto;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white; cursor: pointer;
+  font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.modal-close:hover {
+  background: rgba(255,255,255,0.25);
+  transform: rotate(90deg);
+}
+
+.modal h2 {
+  font-size: 1.9rem; font-weight: 800;
+  margin-bottom: 8px; letter-spacing: -0.02em;
+}
+.modal .modal-sub {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.95rem;
+  margin-bottom: 28px;
+}
+
+.modal-tabs {
+  display: flex;
+  background: rgba(255,255,255,0.06);
+  border-radius: 40px;
+  padding: 5px;
+  margin-bottom: 28px;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.modal-tab {
+  flex: 1;
+  padding: 12px;
+  border-radius: 40px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-weight: 600; font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.modal-tab.active {
+  background: rgba(255,255,255,0.18);
+  color: white;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25), inset 0 1px 3px rgba(255,255,255,0.5);
+}
+
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.3s;
+  outline: none;
+}
+.form-group input::placeholder { color: rgba(255,255,255,0.4); }
+.form-group input:focus,
+.form-group select:focus {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(79,126,255,0.7);
+  box-shadow: 0 0 0 4px rgba(79,126,255,0.15), inset 0 1px 3px rgba(255,255,255,0.3);
+}
+.form-group select option { background: #1a2a3a; color: white; }
+
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 20px 0 24px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.5;
+}
+.form-check input {
+  margin-top: 3px;
+  width: 18px; height: 18px;
+  accent-color: #4f9eff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.form-check a { color: #9ac7ff; text-decoration: none; }
+.form-check a:hover { text-decoration: underline; }
+
+.modal-submit {
+  width: 100%;
+  padding: 17px;
+  border-radius: 40px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.12));
+  border: 1px solid rgba(255,255,255,0.6);
+  color: white;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 20px 35px -12px rgba(79,126,255,0.8), inset 0 1px 5px white;
+}
+.modal-submit:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.45), rgba(255,255,255,0.22));
+  box-shadow: 0 28px 45px -12px rgba(79,126,255,1), inset 0 1px 8px white;
+}
+
+.modal-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.82rem;
+}
+.modal-divider::before,
+.modal-divider::after {
+  content: ""; flex: 1; height: 1px;
+  background: rgba(255,255,255,0.15);
+}
+
+.social-login { display: flex; gap: 12px; }
+.social-login button {
+  flex: 1;
+  padding: 13px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.social-login button:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.4);
+  transform: translateY(-2px);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+  .hero { grid-template-columns: 1fr; gap: 60px; }
+  .hero h1 { font-size: 3rem; }
+  .float-card:nth-child(2) { margin-left: 0; }
+  .teachers-grid { grid-template-columns: repeat(2, 1fr); }
+  .courses-grid { grid-template-columns: repeat(2, 1fr); }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+}
+
+@media (max-width: 800px) {
+  .navbar-wrap {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 18px;
+  }
+  .nav-links { order: 3; width: 100%; justify-content: center; }
+  .nav-links a { padding: 8px 14px; font-size: 0.85rem; }
+  .hero { margin-top: 190px; padding: 20px; }
+  .hero h1 { font-size: 2.3rem; }
+  .section { padding: 70px 20px 20px; }
+  .section-head h2 { font-size: 2rem; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); padding: 24px; }
+  .teachers-grid, .courses-grid { grid-template-columns: 1fr; }
+  .cta-box { padding: 45px 25px; }
+  .cta-box h2 { font-size: 1.9rem; }
+  .footer { padding: 35px 25px 25px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 26px; }
+  .modal { padding: 32px 24px; }
+  .modal h2 { font-size: 1.5rem; }
+  .hero-cta { flex-direction: column; }
+  .btn-large { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .logo-text { font-size: 1.2rem; }
+  .nav-actions .btn-ghost { display: none; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .stat-number { font-size: 1.9rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ORQA FON YORUG'LIKLARI -->
+<div class="glow-bg">
+  <span></span><span></span><span></span><span></span>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar-wrap glass">
+  <a href="#" class="logo">
+    <div class="logo-icon">T</div>
+    <div class="logo-text">Ta'limiyEdu</div>
+  </a>
+  <div class="nav-links">
+    <a href="#courses">Kurslar</a>
+    <a href="#teachers">Ustozlar</a>
+    <a href="#reviews">Fikrlar</a>
+    <a href="#contact">Aloqa</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-ghost" onclick="openModal('login')">Kirish</button>
+    <button class="btn-primary" onclick="openModal('register')">Ro'yxatdan o'tish</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Yangi kurslar mavjud
+    </div>
+    <h1>Kelajak ta'limi <br><span class="grad">suyuq shisha</span> uslubida</h1>
+    <p class="lead">
+      Zamonaviy interfeys, shaffof dizayn va cheksiz imkoniyatlar.
+      Eng yaxshi ustozlardan o'rganing va bugun o'z kelajagingizni quring.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-large fill" onclick="scrollToSection('courses')">
+        ✦ Kurslarni ko'rish
+      </button>
+      <button class="btn-large outline" onclick="openModal('register')">
+        🚀 Bepul boshlash
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="float-card glass">
+      <div class="fc-icon">📘</div>
+      <div class="fc-text">
+        <h4>Frontend dasturlash</h4>
+        <p>HTML, CSS, JavaScript — noldan professionalgacha</p>
+      </div>
+    </div>
+    <div class="float-card glass">
+      <div class="fc-icon">🧠</div>
+      <div class="fc-text">
+        <h4>Sun'iy intellekt</h4>
+        <p>Machine Learning va neyron tarmoqlar asoslari</p>
+      </div>
+    </div>
+    <div class="float-card glass">
+      <div class="fc-icon">🎨</div>
+      <div class="fc-text">
+        <h4>UI/UX dizayn</h4>
+        <p>Figma, prototiplash va foydalanuvchi tajribasi</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-grid glass">
+    <div class="stat-item">
+      <div class="stat-number">12,400+</div>
+      <div class="stat-label">Faol talabalar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">250+</div>
+      <div class="stat-label">Video kurslar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">98%</div>
+      <div class="stat-label">Qoniqish darajasi</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Yordam xizmati</div>
+    </div>
+  </div>
+</section>
+
+<!-- USTOZLAR -->
+<section class="section" id="teachers">
+  <div class="section-head">
+    <span class="kicker">Bizning jamoa</span>
+    <h2>Eng yaxshi <span class="grad">ustozlar</span></h2>
+    <p>Har biri o'z sohasida 5+ yillik tajribaga ega bo'lgan professional mutaxassislar</p>
+  </div>
+
+  <div class="teachers-grid">
+    <div class="teacher-card glass">
+      <div class="teacher-avatar ta-1">AK</div>
+      <h3>Aziz Karimov</h3>
+      <div class="role">Senior Frontend Developer</div>
+      <div class="teacher-tags">
+        <span class="tag">React</span>
+        <span class="tag">Vue</span>
+        <span class="tag">TypeScript</span>
+      </div>
+      <div class="teacher-stats">
+        <div><span class="num">8+</span><span class="lbl">Yil</span></div>
+        <div><span class="num">3.2k</span><span class="lbl">Talaba</span></div>
+        <div><span class="num">4.9</span><span class="lbl">Reyting</span></div>
+      </div>
+    </div>
+
+    <div class="teacher-card glass">
+      <div class="teacher-avatar ta-2">MS</div>
+      <h3>Malika Saidova</h3>
+      <div class="role">AI / ML Engineer</div>
+      <div class="teacher-tags">
+        <span class="tag">Python</span>
+        <span class="tag">TensorFlow</span>
+        <span class="tag">NLP</span>
+      </div>
+      <div class="teacher-stats">
+        <div><span class="num">6+</span><span class="lbl">Yil</span></div>
+        <div><span class="num">2.8k</span><span class="lbl">Talaba</span></div>
+        <div><span class="num">4.9</span><span class="lbl">Reyting</span></div>
+      </div>
+    </div>
+
+    <div class="teacher-card glass">
+      <div class="teacher-avatar ta-3">JR</div>
+      <h3>Jasur Rahimov</h3>
+      <div class="role">UX/UI Dizayner</div>
+      <div class="teacher-tags">
+        <span class="tag">Figma</span>
+        <span class="tag">Prototyping</span>
+        <span class="tag">Design System</span>
+      </div>
+      <div class="teacher-stats">
+        <div><span class="num">7+</span><span class="lbl">Yil</span></div>
+        <div><span class="num">2.1k</span><span class="lbl">Talaba</span></div>
+        <div><span class="num">4.8</span><span class="lbl">Reyting</span></div>
+      </div>
+    </div>
+
+    <div class="teacher-card glass">
+      <div class="teacher-avatar ta-4">ZN</div>
+      <h3>Zilola Nazarova</h3>
+      <div class="role">Backend Developer</div>
+      <div class="teacher-tags">
+        <span class="tag">Node.js</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">Docker</span>
+      </div>
+      <div class="teacher-stats">
+        <div><span class="num">5+</span><span class="lbl">Yil</span></div>
+        <div><span class="num">1.9k</span><span class="lbl">Talaba</span></div>
+        <div><span class="num">4.9</span><span class="lbl">Reyting</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KURSLAR -->
+<section class="section" id="courses">
+  <div class="section-head">
+    <span class="kicker">O'quv dasturlari</span>
+    <h2>Mashhur <span class="grad">kurslar</span></h2>
+    <p>O'zingizga mos yo'nalishni tanlang va bugun o'rganishni boshlang</p>
+  </div>
+
+  <div class="courses-grid">
+    <div class="course-card glass">
+      <span class="course-badge cb-popular">Eng mashhur</span>
+      <h3>Frontend dasturlash: 0 dan Pro</h3>
+      <p>HTML, CSS, JavaScript, React va zamonaviy web texnologiyalarni to'liq o'zlashtiring.</p>
+      <div class="course-meta">
+        <span>⏱ 120 soat</span>
+        <span>📚 45 dars</span>
+        <span>⭐ 4.9</span>
+      </div>
+      <div class="course-footer">
+        <div class="course-price">1,200,000 <small>so'm / oy</small></div>
+        <button class="course-btn" onclick="openModal('register')">Boshlash</button>
+      </div>
+    </div>
+
+    <div class="course-card glass">
+      <span class="course-badge cb-new">Yangi</span>
+      <h3>Sun'iy intellekt asoslari</h3>
+      <p>Python, Machine Learning, neyron tarmoqlar va real loyihalar bilan AI o'rganing.</p>
+      <div class="course-meta">
+        <span>⏱ 100 soat</span>
+        <span>📚 38 dars</span>
+        <span>⭐ 4.9</span>
+      </div>
+      <div class="course-footer">
+        <div class="course-price">1,500,000 <small>so'm / oy</small></div>
+        <button class="course-btn" onclick="openModal('register')">Boshlash</button>
+      </div>
+    </div>
+
+    <div class="course-card glass">
+      <span class="course-badge cb-hot">Top tanlov</span>
+      <h3>UI/UX dizayn masterklass</h3>
+      <p>Figma, prototiplash, foydalanuvchi tadqiqoti va dizayn tizimlarini o'rganing.</p>
+      <div class="course-meta">
+        <span>⏱ 80 soat</span>
+        <span>📚 32 dars</span>
+        <span>⭐ 4.8</span>
+      </div>
+      <div class="course-footer">
+        <div class="course-price">1,000,000 <small>so'm / oy</small></div>
+        <button class="course-btn" onclick="openModal('register')">Boshlash</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FIKRLAR -->
+<section class="section" id="reviews">
+  <div class="section-head">
+    <span class="kicker">Fikrlar</span>
+    <h2>Talabalar <span class="grad">nima deydi</span></h2>
+    <p>12,000+ talaba allaqachon o'z kelajagini biz bilan qurmoqda</p>
+  </div>
+
+  <div class="testimonials-grid">
+    <div class="testimonial glass">
+      <div class="quote">"</div>
+      <p>Ta'limiyEdu platformasi orqali frontend dasturlashni o'rgandim va 6 oyda ishga joylashdim. Ustozlar juda professional!</p>
+      <div class="testimonial-author">
+        <div class="t-author-avatar ta-1">SA</div>
+        <div>
+          <h5>Sardor Aliyev</h5>
+          <span>Frontend Developer @ UzTech</span>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial glass">
+      <div class="quote">"</div>
+      <p>UI/UX kursi hayotimni o'zgartirdi. Amaliy loyihalar, real keyslar va mentorlar yordami juda katta.</p>
+      <div class="testimonial-author">
+        <div class="t-author-avatar ta-3">NB</div>
+        <div>
+          <h5>Nilufar Baxtiyorova</h5>
+          <span>Product Designer @ Fintech</span>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial glass">
+      <div class="quote">"</div>
+      <p>AI kursida olgan bilimlarim tufayli kompaniyamda ML loyihasini boshqaryapman. Rahmat LiquidEdu!</p>
+      <div class="testimonial-author">
+        <div class="t-author-avatar ta-2">BT</div>
+        <div>
+          <h5>Bekzod Tursunov</h5>
+          <span>ML Engineer @ DataLab</span>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box glass">
+    <h2>Bugun <span class="grad">bepul</span> boshlang</h2>
+    <p>Ro'yxatdan o'ting va birinchi darsni mutlaqo bepul sinab ko'ring. Karta talab qilinmaydi.</p>
+    <div class="hero-cta">
+      <button class="btn-large fill" onclick="openModal('register')">✦ Hoziroq boshlash</button>
+      <button class="btn-large outline" onclick="openModal('login')">Kirish</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer glass" id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">
+        <div class="logo-icon">L</div>
+        <div class="logo-text">LiquidEdu</div>
+      </a>
+      <p>Zamonaviy ta'lim platformasi. Eng yaxshi ustozlar, real loyihalar va sifatli bilim — barchasi bir joyda.</p>
+      <div class="socials">
+        <a href="#" class="social-btn">f</a>
+        <a href="#" class="social-btn">in</a>
+        <a href="#" class="social-btn">✕</a>
+        <a href="#" class="social-btn">▶</a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Platforma</h4>
+      <ul>
+        <li><a href="#courses">Kurslar</a></li>
+        <li><a href="#teachers">Ustozlar</a></li>
+        <li><a href="#">Narxlar</a></li>
+        <li><a href="#">Sertifikatlar</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Kompaniya</h4>
+      <ul>
+        <li><a href="#">Biz haqimizda</a></li>
+        <li><a href="#">Karyera</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Hamkorlik</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Aloqa</h4>
+      <ul>
+        <li><a href="mailto:info@liquidedu.uz">info@liquidedu.uz</a></li>
+        <li><a href="tel:+998901234567">+998 90 123 45 67</a></li>
+        <li><a href="#">Toshkent, Uzbekistan</a></li>
+        <li><a href="#">Yordam markazi</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div>© 2025 LiquidEdu. Barcha huquqlar himoyalangan.</div>
+    <div>Maxfiylik siyosati • Foydalanish shartlari</div>
+  </div>
+</footer>
+
+<!-- ============ MODAL: RO'YXATDAN O'TISH / KIRISH ============ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal glass" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <h2 id="modalTitle">Ro'yxatdan o'tish</h2>
+    <p class="modal-sub" id="modalSub">Bepul hisob yarating va o'rganishni boshlang</p>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabRegister" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
+      <button class="modal-tab" id="tabLogin" onclick="switchTab('login')">Kirish</button>
+    </div>
+
+    <!-- Ro'yxatdan o'tish formasi -->
+    <form id="registerForm" onsubmit="handleSubmit(event, 'register')">
+      <div class="form-group">
+        <label>To'liq ism</label>
+        <input type="text" placeholder="Ism va familiyangiz" required>
+      </div>
+      <div class="form-group">
+        <label>Email manzil</label>
+        <input type="email" placeholder="sizning@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Telefon raqam</label>
+        <input type="tel" placeholder="+998 90 123 45 67" required>
+      </div>
+      <div class="form-group">
+        <label>Qiziqtirgan yo'nalish</label>
+        <select required>
+          <option value="">Yo'nalishni tanlang</option>
+          <option>Frontend dasturlash</option>
+          <option>Backend dasturlash</option>
+          <option>Sun'iy intellekt</option>
+          <option>UI/UX dizayn</option>
+          <option>Mobile dasturlash</option>
+          <option>Boshqa</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Parol</label>
+        <input type="password" placeholder="Kamida 8 belgi" minlength="8" required>
+      </div>
+
+      <label class="form-check">
+        <input type="checkbox" required>
+        <span>Men <a href="#">Foydalanish shartlari</a> va <a href="#">Maxfiylik siyosati</a>ga roziman</span>
+      </label>
+
+      <button type="submit" class="modal-submit">Hisob yaratish ✦</button>
+
+      <div class="modal-divider">yoki</div>
+
+      <div class="social-login">
+        <button type="button">G Google</button>
+        <button type="button">f Facebook</button>
+      </div>
+    </form>
+
+    <!-- Kirish formasi -->
+    <form id="loginForm" style="display:none;" onsubmit="handleSubmit(event, 'login')">
+      <div class="form-group">
+        <label>Email manzil</label>
+        <input type="email" placeholder="sizning@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Parol</label>
+        <input type="password" placeholder="Parolingiz" required>
+      </div>
+
+      <label class="form-check">
+        <input type="checkbox">
+        <span>Meni eslab qol</span>
+      </label>
+
+      <button type="submit" class="modal-submit">Kirish ✦</button>
+
+      <div class="modal-divider">yoki</div>
+
+      <div class="social-login">
+        <button type="button">G Google</button>
+        <button type="button">f Facebook</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ============ MODAL BOSHQARUVI ============ */
+const modalOverlay = document.getElementById('modalOverlay');
+const modalTitle = document.getElementById('modalTitle');
+const modalSub = document.getElementById('modalSub');
+const tabRegister = document.getElementById('tabRegister');
+const tabLogin = document.getElementById('tabLogin');
+const registerForm = document.getElementById('registerForm');
+const loginForm = document.getElementById('loginForm');
+
+function openModal(mode = 'register') {
+  modalOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  switchTab(mode);
+}
+
+function closeModal() {
+  modalOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === modalOverlay) closeModal();
+}
+
+function switchTab(mode) {
+  if (mode === 'register') {
+    tabRegister.classList.add('active');
+    tabLogin.classList.remove('active');
+    registerForm.style.display = 'block';
+    loginForm.style.display = 'none';
+    modalTitle.textContent = "Ro'yxatdan o'tish";
+    modalSub.textContent = "Bepul hisob yarating va o'rganishni boshlang";
+  } else {
+    tabLogin.classList.add('active');
+    tabRegister.classList.remove('active');
+    registerForm.style.display = 'none';
+    loginForm.style.display = 'block';
+    modalTitle.textContent = "Xush kelibsiz!";
+    modalSub.textContent = "Hisobingizga kirib o'rganishni davom ettiring";
+  }
+}
+
+function handleSubmit(e, type) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.modal-submit');
+  const originalText = btn.textContent;
+  btn.textContent = '⏳ Yuborilmoqda...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.textContent = '✓ Muvaffaqiyatli!';
+    setTimeout(() => {
+      closeModal();
+      btn.textContent = originalText;
+      btn.disabled = false;
+      e.target.reset();
+      alert(type === 'register'
+        ? "Tabriklaymiz! Hisobingiz muvaffaqiyatli yaratildi. Email manzilingizga tasdiqlash xati yuborildi."
+        : "Muvaffaqiyatli kirdingiz! Bosh sahifaga yo'naltirilasiz.");
+    }, 800);
+  }, 1200);
+}
+
+/* ============ SMOOTH SCROLL ============ */
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ============ NAVBAR SCROLL EFFEKTI ============ */
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('.navbar-wrap');
+  if (window.scrollY > 40) {
+    nav.style.background = 'rgba(15, 22, 35, 0.75)';
+    nav.style.boxShadow = '0 30px 50px -20px rgba(0,0,0,0.7), inset 0 1px 3px rgba(255,255,255,0.4)';
+  } else {
+    nav.style.background = 'rgba(255, 255, 255, 0.07)';
+    nav.style.boxShadow = '0 30px 50px -20px rgba(0, 0, 0, 0.55), inset 0 1px 3px rgba(255,255,255,0.55), inset 0 -1px 3px rgba(0,0,0,0.25)';
+  }
+});
+
+/* ============ ESC tugmasi ============ */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ============ SCROLL REVEAL ANIMATSIYASI ============ */
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.teacher-card, .course-card, .testimonial, .stat-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1)';
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
